@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DHP Algorithm Results</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #EFFBFF;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 50px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="file"],
+input[type="date"],
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Association Rule Mining</h1>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Choose CSV File:</label>
+                <input type="file" name="file" id="file" required>
+            </div>
+            <div class="form-group">
+                <label for="start_date">Start Date:</label>
+                <input type="date" name="start_date" id="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date:</label>
+                <input type="date" name="end_date" id="end_date" required>
+            </div>
+            <div class="form-group">
+                <label for="min_support">Min Support (%):</label>
+                <input type="number" step="0.01" name="min_support" id="min_support" required>
+            </div>
+            <div class="form-group">
+                <label for="min_confidence">Min Confidence (%):</label>
+                <input type="number" step="0.01" name="min_confidence" id="min_confidence" required>
+            </div>
+            <button type="submit">Upload</button>
+        </form>
+        {% if data_uploaded %}
+            <h2>Frequent Itemsets</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Itemset</th>
+                        <th>Support</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for k, itemsets in enumerate(frequent_itemsets) %}
+                        {% for itemset, support in itemsets.items() %}
+                            <tr>
+                                <td>{{ list(itemset) }}</td>
+                                <td>{{ support }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Association Rules</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Antecedent</th>
+                        <th>Consequent</th>
+                        <th>Support</th>
+                        <th>Confidence</th>
+                        <th>Lift Ratio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for antecedent, consequent, support, confidence, lift in rules %}
+                        <tr>
+                            <td>{{ antecedent }}</td>
+                            <td>{{ consequent }}</td>
+                            <td>{{ support|floatformat(3) }}</td>
+                            <td>{{ confidence|floatformat(2) }}</td>
+                            <td>{{ lift|floatformat(2) }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>
